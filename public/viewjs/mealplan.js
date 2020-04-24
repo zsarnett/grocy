@@ -126,25 +126,45 @@ var calendar = $("#calendar").fullCalendar({
 				costsAndCaloriesPerServing = '<h5 class="small text-truncate"><span class="locale-number locale-number-generic">' + resolvedRecipe.calories + '</span> kcal ' + __t('per serving') + '<h5>';
 			}
 
-			element.html('\
-				<div> \
-					<h5 class="text-truncate">' + recipe.name + '<h5> \
-					<h5 class="small text-truncate">' + __n(mealPlanEntry.recipe_servings, "%s serving", "%s servings") + '</h5> \
-					<h5 class="small timeago-contextual text-truncate">' + fulfillmentIconHtml + " " + fulfillmentInfoHtml + '</h5> \
-					' + costsAndCaloriesPerServing + ' \
-					<h5> \
-						<a class="ml-1 btn btn-outline-danger btn-xs remove-recipe-button" href="#"><i class="fas fa-trash"></i></a> \
-						<a class="ml-1 btn btn-outline-info btn-xs edit-meal-plan-entry-button" href="#"><i class="fas fa-edit"></i></a> \
-						<a class="ml-1 btn btn-outline-primary btn-xs recipe-order-missing-button ' + recipeOrderMissingButtonDisabledClasses + '" href="#" data-toggle="tooltip" title="' + __t("Put missing products on shopping list") + '" data-recipe-id="' + recipe.id.toString() + '" data-mealplan-servings="' + mealPlanEntry.recipe_servings + '" data-recipe-name="' + recipe.name + '" data-recipe-type="' + recipe.type + '"><i class="fas fa-cart-plus"></i></a> \
-						<a class="ml-1 btn btn-outline-success btn-xs recipe-consume-button ' + recipeConsumeButtonDisabledClasses + '" href="#" data-toggle="tooltip" title="' + __t("Consume all ingredients needed by this recipe") + '" data-recipe-id="' + recipe.id.toString() + '" data-mealplan-servings="' + mealPlanEntry.recipe_servings + '" data-recipe-name="' + recipe.name + '" data-recipe-type="' + recipe.type + '"><i class="fas fa-utensils"></i></a> \
-						<a class="ml-1 btn btn-outline-secondary btn-xs recipe-popup-button" href="#" data-toggle="tooltip" title="' + __t("Display recipe") + '" data-recipe-id="' + recipe.id.toString() + '" data-recipe-name="' + recipe.name + '" data-mealplan-servings="' + mealPlanEntry.recipe_servings + '" data-recipe-type="' + recipe.type + '"><i class="fas fa-eye"></i></a> \
-					</h5> \
-				</div>');
+			element.html(`
+				<a class="discrete-link recipe-popup-button" data-toggle="tooltip" data-recipe-id="${recipe.id.toString()}" data-recipe-name="${recipe.name}" data-mealplan-servings="${mealPlanEntry.recipe_servings}" data-recipe-type="${recipe.type}" href="#">
+					<div class="card m-1">
+						${recipe.picture_file_name && !recipe.picture_file_name.isEmpty() 
+							? `<img data-src="${U("/api/files/recipepictures/")}${btoa(recipe.picture_file_name)}?force_serve_as=picture&best_fit_width=400" class="lazy card-img-top">` 
+							: ""}
+						<div class="card-body text-center">
+							<h5 class="card-title mb-1">${recipe.name}</h5>
+							<div class="small mb-1 text-truncate">${__n(mealPlanEntry.recipe_servings, "%s serving", "%s servings")}</div>
+							<div class="small mb-1 timeago-contextual text-truncate">${fulfillmentIconHtml} ${fulfillmentInfoHtml}</div>
+							${costsAndCaloriesPerServing}
+							<a class="ml-1 btn btn-outline-danger btn-xs remove-recipe-button" href="#"><i class="fas fa-trash"></i></a>
+							<a class="ml-1 btn btn-outline-info btn-xs edit-meal-plan-entry-button" href="#"><i class="fas fa-edit"></i></a>
+							<a class="ml-1 btn btn-outline-primary btn-xs recipe-order-missing-button ${recipeOrderMissingButtonDisabledClasses}" href="#" data-toggle="tooltip" title="${__t("Put missing products on shopping list")}" data-recipe-id="${recipe.id.toString()}" data-mealplan-servings="${mealPlanEntry.recipe_servings}" data-recipe-name="${recipe.name}" data-recipe-type="${recipe.type}"><i class="fas fa-cart-plus"></i></a>
+							<a class="ml-1 btn btn-outline-success btn-xs recipe-consume-button ${recipeConsumeButtonDisabledClasses}" href="#" data-toggle="tooltip" title="${__t("Consume all ingredients needed by this recipe")}" data-recipe-id="${recipe.id.toString()}" data-mealplan-servings="${mealPlanEntry.recipe_servings}" data-recipe-name="${recipe.name}" data-recipe-type="${recipe.type}"><i class="fas fa-utensils"></i></a>
+						</div>
+					</div>
+				</a>
+			`)
 
-			if (recipe.picture_file_name && !recipe.picture_file_name.isEmpty())
-			{
-				element.html(element.html() + '<div class="mx-auto"><img data-src="' + U("/api/files/recipepictures/") + btoa(recipe.picture_file_name) + '?force_serve_as=picture&best_fit_width=400" class="img-fluid lazy"></div>')
-			}
+			// element.html('\
+			// 	<div> \
+			// 		<h5 class="text-truncate">' + recipe.name + '<h5> \
+			// 		<h5 class="small text-truncate">' + __n(mealPlanEntry.recipe_servings, "%s serving", "%s servings") + '</h5> \
+			// 		<h5 class="small timeago-contextual text-truncate">' + fulfillmentIconHtml + " " + fulfillmentInfoHtml + '</h5> \
+			// 		' + costsAndCaloriesPerServing + ' \
+			// 		<h5> \
+			// 			<a class="ml-1 btn btn-outline-danger btn-xs remove-recipe-button" href="#"><i class="fas fa-trash"></i></a> \
+			// 			<a class="ml-1 btn btn-outline-info btn-xs edit-meal-plan-entry-button" href="#"><i class="fas fa-edit"></i></a> \
+			// 			<a class="ml-1 btn btn-outline-primary btn-xs recipe-order-missing-button ' + recipeOrderMissingButtonDisabledClasses + '" href="#" data-toggle="tooltip" title="' + __t("Put missing products on shopping list") + '" data-recipe-id="' + recipe.id.toString() + '" data-mealplan-servings="' + mealPlanEntry.recipe_servings + '" data-recipe-name="' + recipe.name + '" data-recipe-type="' + recipe.type + '"><i class="fas fa-cart-plus"></i></a> \
+			// 			<a class="ml-1 btn btn-outline-success btn-xs recipe-consume-button ' + recipeConsumeButtonDisabledClasses + '" href="#" data-toggle="tooltip" title="' + __t("Consume all ingredients needed by this recipe") + '" data-recipe-id="' + recipe.id.toString() + '" data-mealplan-servings="' + mealPlanEntry.recipe_servings + '" data-recipe-name="' + recipe.name + '" data-recipe-type="' + recipe.type + '"><i class="fas fa-utensils"></i></a> \
+			// 			<a class="ml-1 btn btn-outline-secondary btn-xs recipe-popup-button" href="#" data-toggle="tooltip" title="' + __t("Display recipe") + '" data-recipe-id="' + recipe.id.toString() + '" data-recipe-name="' + recipe.name + '" data-mealplan-servings="' + mealPlanEntry.recipe_servings + '" data-recipe-type="' + recipe.type + '"><i class="fas fa-eye"></i></a> \
+			// 		</h5> \
+			// 	</div>');
+
+			// if (recipe.picture_file_name && !recipe.picture_file_name.isEmpty())
+			// {
+			// 	element.html(element.html() + '<div class="mx-auto"><img data-src="' + U("/api/files/recipepictures/") + btoa(recipe.picture_file_name) + '?force_serve_as=picture&best_fit_width=400" class="img-fluid lazy"></div>')
+			// }
 
 			var dayRecipeName = event.start.format("YYYY-MM-DD");
 			if (!$("#day-summary-" + dayRecipeName).length) // This runs for every event/recipe, so maybe multiple times per day, so only add the day summary once
@@ -716,6 +736,7 @@ $(document).on('click', '.recipe-consume-button', function(e)
 
 $(document).on("click", ".recipe-popup-button", function(e)
 {
+	e.preventDefault();
 	// Remove the focus from the current button
 	// to prevent that the tooltip stays until clicked anywhere else
 	document.activeElement.blur();

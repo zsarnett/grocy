@@ -76,6 +76,8 @@ $("#status-filter").on("change", function()
 
 $(".recipe-delete").on('click', function(e)
 {
+	e.preventDefault();
+	
 	var objectName = $(e.currentTarget).attr('data-recipe-name');
 	var objectId = $(e.currentTarget).attr('data-recipe-id');
 
